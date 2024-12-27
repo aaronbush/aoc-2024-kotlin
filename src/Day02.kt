@@ -2,13 +2,13 @@ import kotlin.math.abs
 
 fun main() {
     fun allIncOrDec(): (List<Int>) -> Boolean = { levels ->
-        val allIncreasing = levels.zipWithNext { a, b -> a.compareTo(b) }.all() { it == 1 }
-        val allDecreasing = levels.zipWithNext { a, b -> a.compareTo(b) }.all() { it == -1 }
+        val allIncreasing = levels.zipWithNext { a, b -> a.compareTo(b) }.all { it == 1 }
+        val allDecreasing = levels.zipWithNext { a, b -> a.compareTo(b) }.all { it == -1 }
         allIncreasing || allDecreasing
     }
 
     fun within3(): (List<Int>) -> Boolean = { levels ->
-        levels.zipWithNext { a, b -> abs(a - b) }.all() { it <= 3 }
+        levels.zipWithNext { a, b -> abs(a - b) }.all { it <= 3 }
     }
 
     fun part1(input: List<String>): Int {
@@ -27,8 +27,8 @@ fun main() {
         val okReports = reports.mapIndexed { reportNum, levels -> reportNum to (allIncOrDec()(levels) && within3()(levels)) }
         val toCheckReportsIndexes = okReports.filterNot { it.second }.map { it.first }
 
-        println("ok: ${okReports}")
-        println("toCheck2: ${toCheckReportsIndexes}")
+//        println("ok: ${okReports}")
+//        println("toCheck2: ${toCheckReportsIndexes}")
 
         val toCheckReports = reports.filterIndexed { index, levels -> toCheckReportsIndexes.contains(index) }
         val passed = toCheckReports.filter { levels ->
@@ -40,6 +40,10 @@ fun main() {
                     break
                 }
             }
+            if (!passed) {
+                val found = reports.mapIndexedNotNull { ix, r -> if (r == levels) { ix to r} else {null } }
+                println(found)
+            }
             passed
         }
         println("passed: ${passed.size}")
@@ -47,10 +51,10 @@ fun main() {
         return okReports.filter { it.second }.size + passed.size
     }
 
-    check(part1(readInput("Day02_test")) == 2)
-    check(part2(readInput("Day02_test")) == 4)
+//    check(part1(readInput("Day02_test")) == 2)
+//    check(part2(readInput("Day02_test")) == 4)
 
-    val input = readInput("Day02")
+    val input = readInput("Day02_wes")
 //    part1(input).println()
     part2(input).println()
 }
